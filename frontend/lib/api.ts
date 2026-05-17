@@ -147,8 +147,11 @@ export async function runAudit(
 function parseEvent(chunk: string, cbs: AuditCallbacks) {
   let event = "message";
   let dataLines: string[] = [];
-  for (const line of chunk.split("\n")) {
-    if (line.startsWith(":")) continue; // SSE comment / ping
+  // Normalize CRLF -> LF so we handle either separator style.
+  for (const rawLine of chunk.split(/\r?\n/)) {
+    const line = rawLine.replace(/\r$/, "");
+    if (!line) continue;
+    if (line.startsWith(":")) continue; // SSE comment / keep-alive ping
     if (line.startsWith("event:")) event = line.slice(6).trim();
     else if (line.startsWith("data:")) dataLines.push(line.slice(5).trim());
   }
@@ -157,9 +160,13 @@ function parseEvent(chunk: string, cbs: AuditCallbacks) {
   let data: any;
   try {
     data = JSON.parse(raw);
-  } catch {
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn("[sse] failed to parse data", { event, raw, error: e });
     return;
   }
+  // eslint-disable-next-line no-console
+  console.log("[sse]", event, data);
   switch (event) {
     case "job":
       cbs.onJob(data.job_id);
