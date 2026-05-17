@@ -1,0 +1,25 @@
+# Local node install (not for the repo)
+.node/
+
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+
+# Env / secrets
+.env
+.env.local
+*.local
+
+# Uploads / reports
+*.pptx
+*-audit.md
+
+# OS
+.DS_Store

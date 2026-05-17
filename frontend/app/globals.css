@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg text-ink-mid font-sans antialiased;
+    background-image:
+      radial-gradient(at 20% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(168, 85, 247, 0.06) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-border rounded-xl3 shadow-card;
+  }
+  .input-base {
+    @apply bg-surfaceAlt border border-border rounded-xl text-ink-high
+           placeholder:text-ink-muted focus:outline-none focus:border-accent-blue
+           focus:ring-2 focus:ring-accent-blue/30 transition;
+  }
+  .btn-gradient {
+    @apply bg-primary-gradient text-white font-semibold rounded-xl
+           shadow-glow hover:shadow-glowStrong transition
+           disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-surfaceAlt border border-border text-ink-mid font-semibold
+           rounded-xl hover:bg-surfaceAlt/80 hover:border-borderStrong transition;
+  }
+  .section-title {
+    @apply text-ink-high font-bold tracking-tight;
+  }
+  .field-label {
+    @apply block text-sm font-medium text-ink-mid mb-2;
+  }
+}
+
+/* Hide scrollbar in webkit while keeping scrollable */
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hidden {
+  scrollbar-width: none;
+}
