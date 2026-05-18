@@ -122,16 +122,19 @@ export async function runAudit(
       const dec = new TextDecoder();
       let buf = "";
 
+      // Events are separated by a blank line. The SSE spec uses \n\n, but
+      // sse-starlette and many servers emit \r\n\r\n. Match either.
+      const SEP = /\r?\n\r?\n/;
+
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         buf += dec.decode(value, { stream: true });
 
-        // SSE events are separated by a blank line.
-        let idx: number;
-        while ((idx = buf.indexOf("\n\n")) !== -1) {
-          const chunk = buf.slice(0, idx);
-          buf = buf.slice(idx + 2);
+        let m: RegExpExecArray | null;
+        while ((m = SEP.exec(buf))) {
+          const chunk = buf.slice(0, m.index);
+          buf = buf.slice(m.index + m[0].length);
           parseEvent(chunk, cbs);
         }
       }
